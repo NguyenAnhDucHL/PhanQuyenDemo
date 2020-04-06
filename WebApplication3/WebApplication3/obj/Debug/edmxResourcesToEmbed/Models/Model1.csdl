@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="AccountModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Menu">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Menu1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="RoleMenus" Relationship="Self.FK_RoleMenu_Menu" FromRole="Menu" ToRole="RoleMenu" />
+  </EntityType>
+  <EntityType Name="Role">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Role_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="RoleMenus" Relationship="Self.FK_RoleMenu_Role" FromRole="Role" ToRole="RoleMenu" />
+    <NavigationProperty Name="RoleUsers" Relationship="Self.FK_RoleUser_Role" FromRole="Role" ToRole="RoleUser" />
+  </EntityType>
+  <EntityType Name="RoleMenu">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Role_ID" Type="Int32" />
+    <Property Name="Menu_ID" Type="Int32" />
+    <NavigationProperty Name="Menu" Relationship="Self.FK_RoleMenu_Menu" FromRole="RoleMenu" ToRole="Menu" />
+    <NavigationProperty Name="Role" Relationship="Self.FK_RoleMenu_Role" FromRole="RoleMenu" ToRole="Role" />
+  </EntityType>
+  <EntityType Name="RoleUser">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Role_ID" Type="Int32" />
+    <Property Name="User_ID" Type="Int32" />
+    <NavigationProperty Name="Role" Relationship="Self.FK_RoleUser_Role" FromRole="RoleUser" ToRole="Role" />
+    <NavigationProperty Name="User" Relationship="Self.FK_RoleUser_User" FromRole="RoleUser" ToRole="User" />
+  </EntityType>
+  <EntityType Name="sysdiagram">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Password" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Email" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="FullName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Gender" Type="Boolean" />
+    <Property Name="Image" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <Property Name="Status" Type="Boolean" />
+    <Property Name="Mobile" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="RoleUsers" Relationship="Self.FK_RoleUser_User" FromRole="User" ToRole="RoleUser" />
+  </EntityType>
+  <Association Name="FK_RoleMenu_Menu">
+    <End Role="Menu" Type="Self.Menu" Multiplicity="0..1" />
+    <End Role="RoleMenu" Type="Self.RoleMenu" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Menu">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="RoleMenu">
+        <PropertyRef Name="Menu_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RoleMenu_Role">
+    <End Role="Role" Type="Self.Role" Multiplicity="0..1" />
+    <End Role="RoleMenu" Type="Self.RoleMenu" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Role">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="RoleMenu">
+        <PropertyRef Name="Role_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RoleUser_Role">
+    <End Role="Role" Type="Self.Role" Multiplicity="0..1" />
+    <End Role="RoleUser" Type="Self.RoleUser" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Role">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="RoleUser">
+        <PropertyRef Name="Role_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RoleUser_User">
+    <End Role="User" Type="Self.User" Multiplicity="0..1" />
+    <End Role="RoleUser" Type="Self.RoleUser" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="RoleUser">
+        <PropertyRef Name="User_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="AccountEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Menus" EntityType="Self.Menu" />
+    <EntitySet Name="Roles" EntityType="Self.Role" />
+    <EntitySet Name="RoleMenus" EntityType="Self.RoleMenu" />
+    <EntitySet Name="RoleUsers" EntityType="Self.RoleUser" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+    <EntitySet Name="Users" EntityType="Self.User" />
+    <AssociationSet Name="FK_RoleMenu_Menu" Association="Self.FK_RoleMenu_Menu">
+      <End Role="Menu" EntitySet="Menus" />
+      <End Role="RoleMenu" EntitySet="RoleMenus" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RoleMenu_Role" Association="Self.FK_RoleMenu_Role">
+      <End Role="Role" EntitySet="Roles" />
+      <End Role="RoleMenu" EntitySet="RoleMenus" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RoleUser_Role" Association="Self.FK_RoleUser_Role">
+      <End Role="Role" EntitySet="Roles" />
+      <End Role="RoleUser" EntitySet="RoleUsers" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RoleUser_User" Association="Self.FK_RoleUser_User">
+      <End Role="User" EntitySet="Users" />
+      <End Role="RoleUser" EntitySet="RoleUsers" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
