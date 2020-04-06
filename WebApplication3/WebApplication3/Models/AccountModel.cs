@@ -29,7 +29,7 @@ namespace WebApplication3.Models
         public bool AddAccount(AccountEntity account)
         {
             AccountEntities db = new AccountEntities();
-            string query = "Insert into [User] values ( '" + account.AccountName + "' , '" + account.AccountPass + "' )";
+            string query = "EXEC InsertIntoAccount @Name =  '" + account.AccountName + "' , @Password = '" + account.AccountPass + "' ";
             try
             {
                 db.Database.ExecuteSqlCommand(query);
