@@ -7,6 +7,7 @@ using System.Web.Security;
 using WebApplication3.Entity;
 using WebApplication3.Models;
 using WebApplication3.SupportClass;
+using XCrypt;
 
 namespace WebApplication3.Controllers
 {
@@ -26,8 +27,9 @@ namespace WebApplication3.Controllers
         public ActionResult CheckAccount(string txtUserName, string txtPassword)
         {
             AccountModel accountModel = new AccountModel();
-
-            bool check = accountModel.CheckAccount(new AccountEntity(txtUserName, txtPassword));
+            string passXC = new XCryptEngine(XCryptEngine.AlgorithmType.MD5).Encrypt(txtPassword,
+                                                                                         "pl");
+            bool check = accountModel.CheckAccount(new AccountEntity(txtUserName, passXC));
             if (check)
             {
                 Session["username"] = txtUserName;
@@ -62,6 +64,9 @@ namespace WebApplication3.Controllers
             if (true)
             {
                 AccountModel accountModel = new AccountModel();
+                string passXC = new XCryptEngine(XCryptEngine.AlgorithmType.MD5).Encrypt(account.AccountPass,
+                                                                                         "pl");
+                account.AccountPass = passXC;
                 bool check = accountModel.AddAccount(account);
                 if (check == true)
                 {
@@ -73,7 +78,6 @@ namespace WebApplication3.Controllers
                     return View("~/Views/LoginAccount/RegistrationForm.cshtml");
                 }
             }
-            return View("~/Views/LoginAccount/RegistrationForm.cshtml");
         }
 
         public ActionResult LogOut()
