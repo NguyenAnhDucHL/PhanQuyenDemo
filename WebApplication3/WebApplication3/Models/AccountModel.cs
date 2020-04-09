@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using WebApplication3.Entity;
 using System.Web;
+using System.Data.SqlClient;
 
 namespace WebApplication3.Models
 {
@@ -13,8 +14,8 @@ namespace WebApplication3.Models
         {
             AccountEntities db = new AccountEntities();
             //int count = db.Accounts.Where(u => u.AccountName == txtUserName && u.AccountPassword == txtPassword).Count();
-            string query = "Select count(*) as count from [User] where UserName = '" + account.AccountName + "' and Password = '" + account.AccountPass + "'";
-            int count = db.Database.SqlQuery<int>(query).FirstOrDefault();
+            string query = "Select count(*) as count from [User] where UserName = @username and Password = @password";
+            int count = db.Database.SqlQuery<int>(query, new SqlParameter("username", account.AccountName), new SqlParameter("password",account.AccountPass)).FirstOrDefault();
 
             if (count == 0)
             {
