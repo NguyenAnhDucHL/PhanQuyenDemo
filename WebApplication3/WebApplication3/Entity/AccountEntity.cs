@@ -20,13 +20,11 @@ namespace WebApplication3.Entity
         }
         [Required(ErrorMessage = "UserName is not empty")]
         public string AccountName { get; set; }
-        [RegularExpression("^[0-9+]{5}-[0-9+]{7}-[0-9]{1}$", ErrorMessage = "Error only input number")]
         [Required(ErrorMessage = "Password is not empty")]
         public string AccountPass { get; set; }
         [Required]
         [Compare("AccountPass", ErrorMessage = "Password not match")]
         public string RePass { get; set; }
-        [Required(ErrorMessage = "UserName is not empty")]
-        public string ListRole { get; set; }
+        public int Role_ID { get; set; }
     }
 }

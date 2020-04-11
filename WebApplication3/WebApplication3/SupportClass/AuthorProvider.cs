@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Security;
@@ -40,8 +41,8 @@ namespace WebApplication3.SupportClass
         {
             AccountEntities accountEntities = new AccountEntities();
             string query = "Select r.[Role_Name] from [User] u inner join RoleUser ru on u.ID = ru.Role_ID " +
-                           "inner join [Role] r on ru.Role_ID = r.ID where u.UserName = '" + username + "'";
-            var userRoles = accountEntities.Database.SqlQuery<string>(query).ToArray();
+                           "inner join [Role] r on ru.Role_ID = r.ID where u.UserName = @username";
+            var userRoles = accountEntities.Database.SqlQuery<string>(query, new SqlParameter("username", username)).ToArray();
             return userRoles;
         }
 

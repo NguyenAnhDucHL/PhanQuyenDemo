@@ -30,16 +30,15 @@ namespace WebApplication3.Models
         public bool AddAccount(AccountEntity account)
         {
             AccountEntities db = new AccountEntities();
-            string query = "EXEC InsertIntoAccount @Name =  '" + account.AccountName + "' , @Password = '" + account.AccountPass + "' ";
+            string query = "EXEC InsertIntoAccount @Name = @accountname, @Password = @accountpass";
             try
             {
-                db.Database.ExecuteSqlCommand(query);
+                db.Database.ExecuteSqlCommand(query, new SqlParameter("accountname", account.AccountName), new SqlParameter("accountpass", account.AccountPass));
                 int user_id = db.Users.Where(u => u.UserName == account.AccountName && u.Password == account.AccountPass).Select(u => u.ID).FirstOrDefault();
-                string query2 = "Insert into [RoleUser] values ( '" + account.ListRole + "' , '" + user_id + "' )";
-                db.Database.ExecuteSqlCommand(query2);
-
+                string query2 = "Insert into [RoleUser] values (@role_id, @user_id)";
+                db.Database.ExecuteSqlCommand(query2 , new SqlParameter("role_id", account.Role_ID), new SqlParameter("user_id", user_id));
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return false;
             }
