@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace WebApplication3.Controllers
 {
+   
     public class HomeController : Controller
     {
        
@@ -25,7 +26,14 @@ namespace WebApplication3.Controllers
         [Route("home/contact")]
         public ActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
+            if(Session["username"] == null)
+            {
+                ViewBag.Message = "Your contact page.";
+            }
+            else
+            {
+                ViewBag.Message = Session["username"].ToString() + " contact page.";
+            }
             return View();
         }
 

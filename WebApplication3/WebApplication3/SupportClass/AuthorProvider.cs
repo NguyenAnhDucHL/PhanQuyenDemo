@@ -40,7 +40,7 @@ namespace WebApplication3.SupportClass
         public override string[] GetRolesForUser(string username)
         {
             AccountEntities accountEntities = new AccountEntities();
-            string query = "Select r.[Role_Name] from [User] u inner join RoleUser ru on u.ID = ru.Role_ID " +
+            string query = "Select r.[Role_Name] from [User] u inner join RoleUser ru on u.ID = ru.User_ID " +
                            "inner join [Role] r on ru.Role_ID = r.ID where u.UserName = @username";
             var userRoles = accountEntities.Database.SqlQuery<string>(query, new SqlParameter("username", username)).ToArray();
             return userRoles;
