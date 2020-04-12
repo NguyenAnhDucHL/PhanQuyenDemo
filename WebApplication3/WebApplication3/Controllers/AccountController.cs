@@ -19,15 +19,26 @@ namespace WebApplication3.Controllers
         [Route("login")]
         public ActionResult Index()
         {
+            if (HttpContext.Request.Cookies["remme"] != null)
+            {
+                HttpCookie remme = HttpContext.Request.Cookies.Get("remme");
+                AccountEntity a = new AccountEntity()
+                {
+                    AccountName = remme.Values.Get("username"),
+                    AccountPass = remme.Values.Get("password")
+                };
+                ViewBag.login = a;
+                return View("~/Views/LoginAccount/LoginForm.cshtml");
+            }
             return View("~/Views/LoginAccount/LoginForm.cshtml");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("home")]
-        public ActionResult CheckAccount(string txtUserName, string txtPassword)
+        public ActionResult CheckAccount(string txtUserName, string txtPassword, string rm)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 AccountModel accountModel = new AccountModel();
                 string passXC = new XCryptEngine(XCryptEngine.AlgorithmType.MD5).Encrypt(txtPassword,
@@ -36,6 +47,14 @@ namespace WebApplication3.Controllers
                 if (check)
                 {
                     Session["username"] = txtUserName;
+                    if (rm.Equals("on"))
+                    {
+                        HttpCookie remme = new HttpCookie("remme");
+                        remme["username"] = txtUserName;
+                        remme["password"] = txtPassword;
+                        remme.Expires = DateTime.Now.AddDays(365);
+                        HttpContext.Response.Cookies.Add(remme);
+                    }
                     FormsAuthentication.SetAuthCookie(txtUserName, false);
                     return View("~/Views/Home/Index.cshtml");
                 }
@@ -50,7 +69,7 @@ namespace WebApplication3.Controllers
                 ViewBag.error = "Error";
                 return View("~/Views/LoginAccount/LoginForm.cshtml");
             }
-           
+
         }
 
         [Route("registration")]
