@@ -47,7 +47,7 @@ namespace WebApplication3.Controllers
                 if (check)
                 {
                     Session["username"] = txtUserName;
-                    if (rm.Equals("on"))
+                    if (rm != null && rm.Equals("on"))
                     {
                         HttpCookie remme = new HttpCookie("remme");
                         remme["username"] = txtUserName;
